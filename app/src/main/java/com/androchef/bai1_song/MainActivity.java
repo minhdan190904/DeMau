@@ -19,6 +19,7 @@ import androidx.core.view.WindowInsetsCompat;
 
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 
+import java.util.ArrayList;
 import java.util.Comparator;
 import java.util.List;
 
@@ -31,7 +32,7 @@ public class MainActivity extends AppCompatActivity {
     private List<Song> songs;
     private static final int UPDATE_CODE = 365;
     private EditText etSearch;
-
+    private List<Song> allSongs;
 
     ActivityResultLauncher<Intent> launcher = registerForActivityResult(
             new ActivityResultContracts.StartActivityForResult(),
@@ -60,11 +61,15 @@ public class MainActivity extends AppCompatActivity {
             }
     );
 
+
+
     public void updateUI() {
-        songs = sqlHelper.getAllSongOrder();
-        songs.sort(Comparator.comparing(Song::getTime));
+        allSongs = sqlHelper.getAllSongOrder();
+        allSongs.sort(Comparator.comparing(Song::getTime));
+        songs = new ArrayList<>(allSongs);
         listAdapter.updateList(songs);
     }
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -92,7 +97,7 @@ public class MainActivity extends AppCompatActivity {
 
             @Override
             public void onTextChanged(CharSequence charSequence, int i, int i1, int i2) {
-                listAdapter.searchSong(etSearch.getText().toString(), songs);
+                listAdapter.searchSong(etSearch.getText().toString(), allSongs);
             }
 
             @Override
@@ -130,9 +135,11 @@ public class MainActivity extends AppCompatActivity {
         etSearch = findViewById(R.id.etSearch);
         listView = findViewById(R.id.listView);
         sqlHelper = new SqlHelper(MainActivity.this);
-        songs = sqlHelper.getAllSongOrder();
-        songs.sort(Comparator.comparing(Song::getTime));
+        allSongs = sqlHelper.getAllSongOrder();
+        allSongs.sort(Comparator.comparing(Song::getTime));
+        songs = new ArrayList<>(allSongs);
         listAdapter = new ListAdapter(MainActivity.this, songs);
         listView.setAdapter(listAdapter);
     }
+
 }

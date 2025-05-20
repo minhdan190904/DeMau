@@ -32,7 +32,7 @@ public class ListAdapter extends ArrayAdapter<Song> {
     }
 
     public void searchSong(String key, List<Song> allSongBase){
-        if(key.isEmpty()){
+        if(key.equals("")){
             updateList(allSongBase);
         } else {
             List<Song> orderKeyList = new ArrayList<>();
